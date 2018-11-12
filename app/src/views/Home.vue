@@ -43,7 +43,7 @@ import ToDo from '@/components/ToDo.vue';
 const filters = {
   all: todos => todos,
   active: todos => todos.filter(todo => !todo.completed),
-  completed: todo => todos.filter(todo => todo.completed)
+  completed: todos => todos.filter(todo => todo.completed)
 };
 
 export default {
