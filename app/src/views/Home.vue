@@ -1,14 +1,9 @@
 <template>
   <div id="home">
     <section class="todoapp">
-      <header class="header">
-        <h1>todos</h1>
-        <input class="new-todo"
-          autofocus autocomplete="off"
-          placeholder="What needs to be done?"
-          v-model="newTodo"
-          @keyup.enter="addTodo">
-      </header>
+      <CreateToDo
+				@keydown.enter="addTodo"
+			/>
 
       <section class="main" v-show="todos.length" v-cloak>
         <input class="toggle-all" type="checkbox" v-model="allDone">
@@ -37,9 +32,9 @@
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
         <ul class="filters">
-          <li><a @click="filterTodos('all')" :class="{ selected: visibility == 'all' }">All</a></li>
-          <li><a @click="filterTodos('active')" :class="{ selected: visibility == 'active' }">Active</a></li>
-          <li><a @click="filterTodos('completed')" :class="{ selected: visibility == 'completed' }">Completed</a></li>
+          <li><a href="#/all" :class="{ selected: visibility == 'all' }">All</a></li>
+          <li><a href="#/active" :class="{ selected: visibility == 'active' }">Active</a></li>
+          <li><a href="#/completed" :class="{ selected: visibility == 'completed' }">Completed</a></li>
         </ul>
         <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
           Clear completed
@@ -52,107 +47,105 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import CreateToDo from '@/components/CreateToDo.vue';
 
 // visibility filters
-var filters = {
+const filters = {
   all(todos) {
-    return todos
+    return todos;
   },
   active(todos) {
-    return todos.filter(todo => !todo.completed)
+    return todos.filter(todo => !todo.completed);
   },
   completed(todos) {
-    return todos.filter(todo => todo.completed)
-  }
-}
+    return todos.filter(todo => todo.completed);
+  },
+};
 
 export default {
   name: 'home',
   components: {
-    HelloWorld,
-},
+    CreateToDo,
+  },
   methods: {
-    addTodo() {
-      var value = this.newTodo && this.newTodo.trim()
+    addTodo(e) {
+      const value = e.target.value && e.target.value.trim();
       if (!value) {
-        return
+        return;
       }
-      this.todos.push({
-        id: this.newId++,
-        title: value,
-        completed: false
-      })
-      this.newTodo = ''
+			this.$store.dispatch('addTodo', value);
+			e.target.value = '';
     },
-
     removeTodo(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1)
+      this.todos.splice(this.todos.indexOf(todo), 1);
     },
 
     editTodo(todo) {
-      this.beforeEditCache = todo.title
-      this.editedTodo = todo
+      this.beforeEditCache = todo.title;
+      this.editedTodo = todo;
     },
 
     doneEdit(todo) {
       if (!this.editedTodo) {
-        return
+        return;
       }
-      this.editedTodo = null
-      todo.title = todo.title.trim()
+      this.editedTodo = null;
+      todo.title = todo.title.trim();
       if (!todo.title) {
-        this.removeTodo(todo)
+        this.removeTodo(todo);
       }
     },
 
     cancelEdit(todo) {
-      this.editedTodo = null
-      todo.title = this.beforeEditCache
+      this.editedTodo = null;
+      todo.title = this.beforeEditCache;
     },
 
     removeCompleted() {
-      this.todos = filters.active(this.todos)
+      this.todos = filters.active(this.todos);
     },
-  },
-  data () {
-    return {
-    todos: [{id:4, title:'srtjdydkyfk', completed: false}],
-    newTodo: '',
-    newId: 0,
-    editedTodo: null,
-    visibility: 'all'
-    }
   },
   computed: {
+		todos() {
+			return this.$store.state.todos;
+		},
+    newId() {
+			return this.$store.state.newId;
+		},
+    editedTodo() {
+			return this.$store.state.editedToDo;
+		},
+    visibility() {
+			return this.$store.state.visibility;
+		},
     filteredTodos() {
-      return filters[this.visibility](this.todos)
+      return filters[this.visibility](this.todos);
     },
     remaining() {
-      return filters.active(this.todos).length
+      return filters.active(this.todos).length;
     },
     allDone: {
       get() {
-        return this.remaining === 0
+        return this.remaining === 0;
       },
       set(value) {
-        this.todos.forEach((todo) => todo.completed = value)
-      }
-    }
+        this.todos.forEach(todo => todo.completed = value);
+      },
+    },
   },
-    filters: {
+  filters: {
     pluralize(n) {
-      return n === 1 ? 'item' : 'items'
+      return n === 1 ? 'item' : 'items';
     },
   },
   directives: {
-    focus(el, binding){
+    focus(el, binding) {
       if (binding.value) {
-        el.focus()
+        el.focus();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -204,7 +197,7 @@ body {
 	margin: 130px 0 40px 0;
 	position: relative;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
-	            0 25px 50px 0 rgba(0, 0, 0, 0.1);
+              0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
 
 .todoapp input::-webkit-input-placeholder {
@@ -415,10 +408,10 @@ label[for='toggle-all'] {
 	height: 50px;
 	overflow: hidden;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
-	            0 8px 0 -3px #f6f6f6,
-	            0 9px 1px -3px rgba(0, 0, 0, 0.2),
-	            0 16px 0 -6px #f6f6f6,
-	            0 17px 2px -6px rgba(0, 0, 0, 0.2);
+              0 8px 0 -3px #f6f6f6,
+              0 9px 1px -3px rgba(0, 0, 0, 0.2),
+              0 16px 0 -6px #f6f6f6,
+              0 17px 2px -6px rgba(0, 0, 0, 0.2);
 }
 
 .todo-count {
