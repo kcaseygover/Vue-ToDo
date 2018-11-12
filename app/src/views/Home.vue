@@ -8,22 +8,11 @@
       <section class="main" v-show="todos.length" v-cloak>
         <input class="toggle-all" type="checkbox" v-model="allDone">
         <ul class="todo-list">
-          <li v-for="todo in filteredTodos"
-            class="todo"
-            :key="todo.id"
-            :class="{ completed: todo.completed, editing: todo == editedTodo }">
-            <div class="view">
-              <input class="toggle" type="checkbox" v-model="todo.completed">
-              <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
-              <button class="destroy" @click="removeTodo(todo)"></button>
-            </div>
-            <input class="edit" type="text"
-              v-model="todo.title"
-              v-focus="todo == editedTodo"
-              @blur="doneEdit(todo)"
-              @keyup.enter="doneEdit(todo)"
-              @keyup.esc="cancelEdit(todo)">
-          </li>
+					<ToDo
+						v-for="(todo, index) in filteredTodos"
+						:key="index"
+						:todo="todo"
+					/>
         </ul>
       </section>
 
@@ -48,6 +37,7 @@
 <script>
 // @ is an alias to /src
 import CreateToDo from '@/components/CreateToDo.vue';
+import ToDo from '@/components/ToDo.vue';
 
 // visibility filters
 const filters = {
@@ -65,7 +55,8 @@ const filters = {
 export default {
   name: 'home',
   components: {
-    CreateToDo,
+		CreateToDo,
+		ToDo,
   },
   methods: {
     addTodo(e) {
@@ -76,31 +67,6 @@ export default {
 			this.$store.dispatch('addTodo', value);
 			e.target.value = '';
     },
-    removeTodo(todo) {
-      this.todos.splice(this.todos.indexOf(todo), 1);
-    },
-
-    editTodo(todo) {
-      this.beforeEditCache = todo.title;
-      this.editedTodo = todo;
-    },
-
-    doneEdit(todo) {
-      if (!this.editedTodo) {
-        return;
-      }
-      this.editedTodo = null;
-      todo.title = todo.title.trim();
-      if (!todo.title) {
-        this.removeTodo(todo);
-      }
-    },
-
-    cancelEdit(todo) {
-      this.editedTodo = null;
-      todo.title = this.beforeEditCache;
-    },
-
     removeCompleted() {
       this.todos = filters.active(this.todos);
     },
@@ -111,9 +77,6 @@ export default {
 		},
     newId() {
 			return this.$store.state.newId;
-		},
-    editedTodo() {
-			return this.$store.state.editedToDo;
 		},
     visibility() {
 			return this.$store.state.visibility;
@@ -136,13 +99,6 @@ export default {
   filters: {
     pluralize(n) {
       return n === 1 ? 'item' : 'items';
-    },
-  },
-  directives: {
-    focus(el, binding) {
-      if (binding.value) {
-        el.focus();
-      }
     },
   },
 };
