@@ -6,7 +6,7 @@
 			/>
 
       <section class="main" v-show="todos.length" v-cloak>
-        <input class="toggle-all" type="checkbox" v-model="allDone">
+        <input class="toggle-all" type="checkbox" :checked="allDone" @change="toggleAll(!allDone)">
         <ul class="todo-list">
 					<ToDo
 						v-for="(todo, index) in filteredTodos"
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 // @ is an alias to /src
 import CreateToDo from '@/components/CreateToDo.vue';
 import ToDo from '@/components/ToDo.vue';
@@ -59,6 +60,10 @@ export default {
     }
   },
   methods: {
+		...mapActions([
+      'toggleAll',
+      'removeCompleted'
+    ]),
     addTodo(e) {
       const value = e.target.value && e.target.value.trim();
       if (!value) {
@@ -66,9 +71,6 @@ export default {
       }
 			this.$store.dispatch('addTodo', value);
 			e.target.value = '';
-    },
-    removeCompleted() {
-      this.todos = filters.active(this.todos);
     },
   },
   computed: {
@@ -81,14 +83,9 @@ export default {
     remaining() {
       return filters.active(this.todos).length;
     },
-    allDone: {
-      get() {
-        return this.remaining === 0;
-      },
-      set(value) {
-        this.todos.forEach(todo => todo.completed = value);
-      },
-    },
+    allDone() {
+			 return this.todos.every(todo => todo.completed)
+		}
   },
   filters: {
     pluralize(n) {

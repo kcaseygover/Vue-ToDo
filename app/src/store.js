@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  // strict: true,
+  strict: true,
   state: {
     todos: [{ id: 1, title: 'srtjdydkyfk', completed: false }],
     newId: 2
@@ -45,5 +45,17 @@ export default new Vuex.Store({
     editTodo ({ commit }, { todo, value }) {
       commit('editTodo', { todo, title: value })
     },
+    toggleAll ({ state, commit }, completed) {
+      state.todos.forEach((todo) => {
+        commit('editTodo', { todo, completed })
+      })
+    },
+  
+    removeCompleted ({ state, commit }) {
+      state.todos.filter(todo => todo.completed)
+        .forEach(todo => {
+          commit('removeTodo', todo)
+        })
+    }
   },
 });
