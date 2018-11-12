@@ -1,15 +1,20 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import api from './api';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   strict: true,
   state: {
-    todos: [{ id: 1, title: 'srtjdydkyfk', completed: false }],
+    todoLists: [],
+    todos: [],
     newId: 2
   },
   mutations: {
+    loadTodoLists(state, todoLists) {
+      state.todoLists = todoLists;
+    },
     addTodo(state, value) {
       if (!value) {
         return;
@@ -20,28 +25,29 @@ export default new Vuex.Store({
         completed: false,
       });
     },
-    removeTodo (state, todo) {
+    removeTodo(state, todo) {
       state.todos.splice(state.todos.indexOf(todo), 1)
     },
-  
-    editTodo (state, { todo, title = todo.title, completed = todo.completed }) {
+    editTodo(state, { todo, title = todo.title, completed = todo.completed }) {
       todo.title = title
       todo.completed = completed
     }
-
   },
   actions: {
+    async loadTodoLists({ commit }) {
+      const todoLists = await api.getTodoLists();
+      console.log('todoLists',todoLists);
+      commit('loadTodoLists', todoLists);
+    },
     addTodo({ commit }, text) {
       commit('addTodo', text);
     },
     removeTodo ({ commit }, todo) {
       commit('removeTodo', todo)
     },
-  
     toggleTodo ({ commit }, todo) {
       commit('editTodo', { todo, completed: !todo.completed })
     },
-  
     editTodo ({ commit }, { todo, value }) {
       commit('editTodo', { todo, title: value })
     },
@@ -50,7 +56,6 @@ export default new Vuex.Store({
         commit('editTodo', { todo, completed })
       })
     },
-  
     removeCompleted ({ state, commit }) {
       state.todos.filter(todo => todo.completed)
         .forEach(todo => {
