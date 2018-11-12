@@ -21,9 +21,9 @@
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
         <ul class="filters">
-          <li><a href="#/all" :class="{ selected: visibility == 'all' }">All</a></li>
-          <li><a href="#/active" :class="{ selected: visibility == 'active' }">Active</a></li>
-          <li><a href="#/completed" :class="{ selected: visibility == 'completed' }">Completed</a></li>
+          <li><a href="#/all" :class="{ selected: visibility == 'all' }" @click="visibility = 'all'">All</a></li>
+          <li><a href="#/active" :class="{ selected: visibility == 'active' }" @click="visibility = 'active'">Active</a></li>
+          <li><a href="#/completed" :class="{ selected: visibility == 'completed' }" @click="visibility = 'completed'">Completed</a></li>
         </ul>
         <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
           Clear completed
@@ -57,6 +57,12 @@ export default {
   components: {
 		CreateToDo,
 		ToDo,
+	},
+	data () {
+    return {
+      visibility: 'all',
+      filters: filters
+    }
   },
   methods: {
     addTodo(e) {
@@ -74,12 +80,6 @@ export default {
   computed: {
 		todos() {
 			return this.$store.state.todos;
-		},
-    newId() {
-			return this.$store.state.newId;
-		},
-    visibility() {
-			return this.$store.state.visibility;
 		},
     filteredTodos() {
       return filters[this.visibility](this.todos);

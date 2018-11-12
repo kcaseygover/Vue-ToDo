@@ -7,8 +7,7 @@ export default new Vuex.Store({
   // strict: true,
   state: {
     todos: [{ id: 1, title: 'srtjdydkyfk', completed: false }],
-    newId: 2,
-    visibility: 'all',
+    newId: 2
   },
   mutations: {
     addTodo(state, value) {
