@@ -62,7 +62,10 @@ export default new Vuex.Store({
     },
     async loadTodoList({ commit }, { id }) {
       const todoList = await api.getTodoList(id);
-      commit('loadTodoList', todoList);
+      // Adding a commit of a single todoList is causing a double entry in the store
+      // We already have the todoList in the store from when app mounted
+      // We could check the store and load the todoList if not commited
+      // Or we could empty state between route changes
       const todos = await Promise.all(todoList.todos.map(id => api.getTodo(id)));
       commit('loadTodos', todos);
       
