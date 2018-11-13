@@ -3,32 +3,6 @@
     <section class="todoapp">
 			<h1>todos</h1>
 			<CreateToDoList />
-      <CreateToDo />
-      <section class="main" v-show="todos.length" v-cloak>
-        <input class="toggle-all" type="checkbox" :checked="allDone" @change="toggleAll(!allDone)">
-        <ul class="todo-list">
-					<ToDo
-						v-for="(todo, index) in filteredTodos"
-						:key="index"
-						:todo="todo"
-					/>
-        </ul>
-      </section>
-
-      <footer class="footer" v-show="todos.length" v-cloak>
-        <span class="todo-count">
-          <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
-        </span>
-        <ul class="filters">
-          <li><a href="#/all" :class="{ selected: visibility == 'all' }" @click="visibility = 'all'">All</a></li>
-          <li><a href="#/active" :class="{ selected: visibility == 'active' }" @click="visibility = 'active'">Active</a></li>
-          <li><a href="#/completed" :class="{ selected: visibility == 'completed' }" @click="visibility = 'completed'">Completed</a></li>
-        </ul>
-        <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
-          Clear completed
-        </button>
-      </footer>
-
     </section>
 		<section class="main">
 			<ul class="todo-list">
@@ -45,35 +19,15 @@
 
 <script>
 import { mapActions } from 'vuex'
-// @ is an alias to /src
-import CreateToDo from '@/components/CreateToDo.vue';
 import CreateToDoList from '@/components/CreateToDoList.vue';
-import ToDo from '@/components/ToDo.vue';
-
-// visibility filters
-const filters = {
-  all: todos => todos,
-  active: todos => todos.filter(todo => !todo.completed),
-  completed: todos => todos.filter(todo => todo.completed)
-};
 
 export default {
   name: 'home',
   components: {
-		CreateToDo,
 		CreateToDoList,
-		ToDo,
 	},
-	data() {
-    return {
-      visibility: 'all',
-      filters: filters
-    }
-  },
   methods: {
 		...mapActions([
-      'toggleAll',
-			'removeCompleted',
 			'removeTodoList'
     ]),
   },
@@ -81,23 +35,6 @@ export default {
 		todoLists() {
 			return this.$store.state.todoLists;
 		},
-		todos() {
-			return this.$store.state.todos;
-		},
-    filteredTodos() {
-      return filters[this.visibility](this.todos);
-    },
-    remaining() {
-      return filters.active(this.todos).length;
-    },
-    allDone() {
-			 return this.todos.every(todo => todo.completed)
-		}
-  },
-  filters: {
-    pluralize(n) {
-      return n === 1 ? 'item' : 'items';
-    },
   },
 };
 </script>
