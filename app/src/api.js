@@ -13,4 +13,8 @@ export default {
     const response = await axiosInstance.post('todo_lists', { name });
     return response.data;
   },
+  async deleteTodoList(id) {
+    const response = await axiosInstance.delete(`todo_lists/${id}`);
+    return response.data;
+  },
 }

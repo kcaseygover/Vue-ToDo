@@ -19,6 +19,9 @@ export default new Vuex.Store({
       console.log('in addToDoList mutation');
       Vue.set(state.todoLists, todoList.id, todoList);
     },
+    removeTodoList(state, index) {
+      state.todoLists.splice(index, 1);
+    },
     addTodo(state, value) {
       if (!value) {
         return;
@@ -29,8 +32,8 @@ export default new Vuex.Store({
         completed: false,
       });
     },
-    removeTodo(state, todo) {
-      state.todos.splice(state.todos.indexOf(todo), 1)
+    removeTodo(state, index) {
+      state.todos.splice(state.todos.indexOf(index), 1)
     },
     editTodo(state, { todo, title = todo.title, completed = todo.completed }) {
       todo.title = title
@@ -40,12 +43,15 @@ export default new Vuex.Store({
   actions: {
     async loadTodoLists({ commit }) {
       const todoLists = await api.getTodoLists();
-      console.log('todoLists',todoLists);
       commit('loadTodoLists', todoLists);
     },
     async createTodoList({ commit }, name) {
       const todoList = await api.createTodoList(name);
       commit('addTodoList', todoList);
+    },
+    async removeTodoList({ commit }, { id, index }) {
+      await api.deleteTodoList(id);
+      commit('removeTodoList', index);
     },
     addTodo({ commit }, todo) {
       commit('addTodo', todo);

@@ -30,15 +30,15 @@
       </footer>
 
     </section>
-		<section>
-			<div>
-				<div v-for="(list, index) in todoLists" :key="index">
-					<div>{{ list.name }}</div>
-					<div v-for="(todo, index) in list.todos" :key="index">
-						<div>{{ todo.title }}</div>
+		<section class="main">
+			<ul class="todo-list">
+				<li v-for="(list, index) in todoLists" :key="index">
+					<div class="view">
+						<label v-text="list.name"></label>
+						<button class="destroy" @click.prevent="removeTodoList({id: list.id, index})"></button>
 					</div>
-				</div>
-			</div>
+				</li>
+			</ul>
 		</section>
   </div>
 </template>
@@ -73,7 +73,8 @@ export default {
   methods: {
 		...mapActions([
       'toggleAll',
-      'removeCompleted'
+			'removeCompleted',
+			'removeTodoList'
     ]),
   },
   computed: {
