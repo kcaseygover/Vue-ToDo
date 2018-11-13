@@ -1,8 +1,7 @@
 <template>
-  <div id="home">
+  <div id="todo-list">
     <section class="todoapp">
-			<h1>todos</h1>
-			<CreateToDoList />
+			<h1>{{ todoList.name }}</h1>
       <CreateToDo />
       <section class="main" v-show="todos.length" v-cloak>
         <input class="toggle-all" type="checkbox" :checked="allDone" @change="toggleAll(!allDone)">
@@ -28,18 +27,7 @@
           Clear completed
         </button>
       </footer>
-
     </section>
-		<section class="main">
-			<ul class="todo-list">
-				<li v-for="(list, index) in todoLists" :key="index">
-					<div class="view">
-						<router-link :to="{ name: 'TodoList', params: { id: list.id }}"><label v-text="list.name"></label></router-link>
-						<button class="destroy" @click.prevent="removeTodoList({id: list.id, index})"></button>
-					</div>
-				</li>
-			</ul>
-		</section>
   </div>
 </template>
 
@@ -47,8 +35,8 @@
 import { mapActions } from 'vuex'
 // @ is an alias to /src
 import CreateToDo from '@/components/CreateToDo.vue';
-import CreateToDoList from '@/components/CreateToDoList.vue';
 import ToDo from '@/components/ToDo.vue';
+import store from '@/store';
 
 // visibility filters
 const filters = {
@@ -58,10 +46,9 @@ const filters = {
 };
 
 export default {
-  name: 'home',
+  name: 'TodoList',
   components: {
 		CreateToDo,
-		CreateToDoList,
 		ToDo,
 	},
 	data() {
@@ -69,6 +56,10 @@ export default {
       visibility: 'all',
       filters: filters
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    store.dispatch('loadTodoList', { id: to.params.id });
+    next();
   },
   methods: {
 		...mapActions([
@@ -78,8 +69,8 @@ export default {
     ]),
   },
   computed: {
-		todoLists() {
-			return this.$store.state.todoLists;
+		todoList() {
+			return this.$store.state.todoLists.find(list => list.id === this.$route.params.id);
 		},
 		todos() {
 			return this.$store.state.todos;
@@ -474,3 +465,5 @@ html .clear-completed:active {
 	}
 }
 </style>
+
+

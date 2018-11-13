@@ -22,6 +22,13 @@ export default new Vuex.Store({
     removeTodoList(state, index) {
       state.todoLists.splice(index, 1);
     },
+    loadTodoList(state, todoList) {
+      Vue.set(state.todoLists, todoList.id, todoList);
+    },
+    loadTodos(state, todos) {
+      state.todos.push([]);
+      todos.forEach(todo => Vue.set(state.todos, todo.id, todo))
+    },
     addTodo(state, value) {
       if (!value) {
         return;
@@ -52,6 +59,13 @@ export default new Vuex.Store({
     async removeTodoList({ commit }, { id, index }) {
       await api.deleteTodoList(id);
       commit('removeTodoList', index);
+    },
+    async loadTodoList({ commit }, { id }) {
+      const todoList = await api.getTodoList(id);
+      commit('loadTodoList', todoList);
+      const todos = await Promise.all(todoList.todos.map(id => api.getTodo(id)));
+      commit('loadTodos', todos);
+      
     },
     addTodo({ commit }, todo) {
       commit('addTodo', todo);

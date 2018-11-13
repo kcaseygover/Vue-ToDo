@@ -17,4 +17,12 @@ export default {
     const response = await axiosInstance.delete(`todo_lists/${id}`);
     return response.data;
   },
+  async getTodoList(id) {
+    const response = await axiosInstance.get(`todo_lists/${id}`);
+    return response.data;
+  },
+  async getTodo(id) {
+    const response = await axiosInstance.get(`todo/${id}`);
+    return response.data;
+  },
 }
