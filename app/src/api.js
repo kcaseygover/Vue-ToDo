@@ -9,4 +9,8 @@ export default {
     const response = await axiosInstance.get('todo_lists');
     return response.data;
   },
+  async createTodoList(name) {
+    const response = await axiosInstance.post('todo_lists', { name });
+    return response.data;
+  },
 }

@@ -15,6 +15,10 @@ export default new Vuex.Store({
     loadTodoLists(state, todoLists) {
       state.todoLists = todoLists;
     },
+    addToDoList(state, todoList) {
+      console.log('in addToDoList mutation');
+      Vue.set(state.todoLists, todoList.id, todoList);
+    },
     addTodo(state, value) {
       if (!value) {
         return;
@@ -39,8 +43,12 @@ export default new Vuex.Store({
       console.log('todoLists',todoLists);
       commit('loadTodoLists', todoLists);
     },
-    addTodo({ commit }, text) {
-      commit('addTodo', text);
+    async createTodoList({ commit }, name) {
+      const todoList = await api.createTodoList(name);
+      commit('addTodoList', todoList);
+    },
+    addTodo({ commit }, todo) {
+      commit('addTodo', todo);
     },
     removeTodo ({ commit }, todo) {
       commit('removeTodo', todo)

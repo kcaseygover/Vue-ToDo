@@ -1,10 +1,9 @@
 <template>
   <div id="home">
     <section class="todoapp">
-      <CreateToDo
-				@keydown.enter="addTodo"
-			/>
-
+			<h1>todos</h1>
+			<CreateToDoList />
+      <CreateToDo />
       <section class="main" v-show="todos.length" v-cloak>
         <input class="toggle-all" type="checkbox" :checked="allDone" @change="toggleAll(!allDone)">
         <ul class="todo-list">
@@ -31,6 +30,16 @@
       </footer>
 
     </section>
+		<section>
+			<div>
+				<div v-for="(list, index) in todoLists" :key="index">
+					<div>{{ list.name }}</div>
+					<div v-for="(todo, index) in list.todos" :key="index">
+						<div>{{ todo.title }}</div>
+					</div>
+				</div>
+			</div>
+		</section>
   </div>
 </template>
 
@@ -38,6 +47,7 @@
 import { mapActions } from 'vuex'
 // @ is an alias to /src
 import CreateToDo from '@/components/CreateToDo.vue';
+import CreateToDoList from '@/components/CreateToDoList.vue';
 import ToDo from '@/components/ToDo.vue';
 
 // visibility filters
@@ -51,9 +61,10 @@ export default {
   name: 'home',
   components: {
 		CreateToDo,
+		CreateToDoList,
 		ToDo,
 	},
-	data () {
+	data() {
     return {
       visibility: 'all',
       filters: filters
@@ -64,16 +75,11 @@ export default {
       'toggleAll',
       'removeCompleted'
     ]),
-    addTodo(e) {
-      const value = e.target.value && e.target.value.trim();
-      if (!value) {
-        return;
-      }
-			this.$store.dispatch('addTodo', value);
-			e.target.value = '';
-    },
   },
   computed: {
+		todoLists() {
+			return this.$store.state.todoLists;
+		},
 		todos() {
 			return this.$store.state.todos;
 		},
