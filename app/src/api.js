@@ -25,4 +25,16 @@ export default {
     const response = await axiosInstance.get(`todo/${id}`);
     return response.data;
   },
+  async createTodo(payload) {
+    const response = await axiosInstance.post('todo');
+    return response.data;
+  },
+  async deleteTodo(id) {
+    const response = await axiosInstance.delete(`todo/${id}`);
+    return response.data;
+  },
+  async updateTodo(id) {
+    const response = await axiosInstance.patch(`todo/${id}`);
+    return response.data;
+  },
 }
