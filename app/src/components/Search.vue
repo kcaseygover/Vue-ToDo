@@ -31,12 +31,13 @@ export default {
   data() {
     return {
       searchValue: '',
+      searchValueId: '',
       results: [],
       isOpen: false
     }
   },
   directives: {
-    focus(el, binding) {
+      focus(el, binding) {
       if (binding.value) {
         el.focus();
       }
@@ -54,7 +55,20 @@ export default {
     },
     setResult(result) {
       this.searchValue = result.name;
+      this.searchValueId = result.id;
       this.isOpen = false;
+    },
+    redirect() {
+      if (this.todoLists.some(list => list.id === this.searchValueId)) {
+        this.$router.push({ name: 'TodoList', params: { id: this.searchValueId }});
+        this.searchValue = '';
+        this.searchValueId = '';
+        this.results = [];
+      } else {
+        this.searchValue = '';
+        this.searchValueId = '';
+        this.results = [];
+      }
     },
   },
   computed: {
