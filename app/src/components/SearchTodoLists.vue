@@ -1,5 +1,5 @@
 <template>
-  <div id="Search">
+  <div id="SearchTodoLists">
     <section class="autocomplete">
       <input
         class="new-todo"
@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'Search',
+  name: 'SearchTodoLists',
   data() {
     return {
       searchValue: '',
