@@ -40,9 +40,9 @@ import store from '@/store';
 
 // visibility filters
 const filters = {
-  all: todos => todos,
-  active: todos => todos.filter(todo => !todo.completed),
-  completed: todos => todos.filter(todo => todo.completed)
+  all: (todoList, todos) => todos.filter(todo => todo.todo_list_id === todoList.id),
+  active: (todoList, todos) => todos.filter(todo => todo.todo_list_id === todoList.id).filter(todo => !todo.completed),
+  completed: (todoList, todos) => todos.filter(todo => todo.todo_list_id === todoList.id).filter(todo => todo.completed),
 };
 
 export default {
@@ -73,16 +73,16 @@ export default {
 			return Object.values(this.$store.state.todoLists);
 		},
 		todoList() {
-			return this.todoLists.find(list => list.id === this.$route.params.id);
+      return this.$store.state.todoLists[this.$route.params.id];
 		},
 		todos() {
-     	return this.$store.state.todos;
+      return this.$store.state.todos;
 		},
     filteredTodos() {
-      return filters[this.visibility](this.todos);
+      return filters[this.visibility](this.todoList, this.todos);
     },
     remaining() {
-      return filters.active(this.todos).length;
+      return filters.active(this.todoList, this.todos).length;
     },
     allDone() {
 			return this.todos.every(todo => todo.completed)

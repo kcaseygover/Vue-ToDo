@@ -40,10 +40,10 @@ export default new Vuex.Store({
     removeTodo(state, index) {
       state.todos.splice(state.todos.indexOf(index), 1)
     },
-    editTodo(state, { todo, title = todo.title, completed = todo.completed }) {
-      todo.title = title
-      todo.completed = completed
-    }
+    editTodo(state, { id, title, completed }) {
+      state.todos[id].title = title;
+      state.todos[id].completed = completed;
+    },
   },
   actions: {
     async loadTodoLists({ commit }) {
@@ -75,11 +75,9 @@ export default new Vuex.Store({
     removeTodo ({ commit }, todo) {
       commit('removeTodo', todo)
     },
-    toggleTodo ({ commit }, todo) {
-      commit('editTodo', { todo, completed: !todo.completed })
-    },
-    editTodo ({ commit }, { todo, value }) {
-      commit('editTodo', { todo, title: value }) 
+    async editTodo({ commit }, { id, title, completed }) {
+      const todo = await api.updateTodo(id, title, completed);
+      commit('editTodo', todo)
     },
     toggleAll ({ state, commit }, completed) {
       state.todos.forEach((todo) => {
