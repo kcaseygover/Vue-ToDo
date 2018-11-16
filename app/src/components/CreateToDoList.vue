@@ -17,11 +17,10 @@ export default {
   methods: {
     createTodoList(e) {
       const name = e.target.value.trim();
-      if (!name) {
-        return;
+      if (name) {
+        this.$store.dispatch('createTodoList', name);
+        e.target.value = '';
       }
-      this.$store.dispatch('createTodoList', name);
-			e.target.value = '';
     },
   },
 };

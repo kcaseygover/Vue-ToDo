@@ -5,7 +5,7 @@
       autofocus
       autocomplete="off"
       placeholder="What needs to be done?"
-      @keydown.enter="addTodo"
+      @keyup.enter="addTodo"
     >
   </header>
 </template>
@@ -15,12 +15,12 @@ export default {
   name: 'CreateToDo',
   methods: {
     addTodo(e) {
-      const value = e.target.value && e.target.value.trim();
-      if (!value) {
-        return;
+      const title = e.target.value.trim();
+      const todoListId = this.$route.params.id;
+      if (title) {
+        this.$store.dispatch('addTodo', { todoListId, title });
+        e.target.value = '';
       }
-			this.$store.dispatch('addTodo', value);
-			e.target.value = '';
     },
   }
 };
