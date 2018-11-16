@@ -4,7 +4,7 @@
 			<h1>{{ todoList.name }}</h1>
       <CreateToDo />
       <section class="main" v-show="todos.length" v-cloak>
-        <input class="toggle-all" type="checkbox" :checked="allDone" @change="toggleAll(!allDone)">
+        <input class="toggle-all" type="checkbox" :checked="allDone" @change="toggleAll({done:!allDone, todos: allTodos})">
         <ul class="todo-list">
 					<ToDo
 						v-for="(todo, index) in filteredTodos"
@@ -14,7 +14,7 @@
         </ul>
       </section>
 
-      <footer class="footer" v-show="todos.length" v-cloak>
+      <footer class="footer" v-show="allTodos.length" v-cloak>
         <span class="todo-count">
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
@@ -23,7 +23,7 @@
           <li><a href="#/active" :class="{ selected: visibility == 'active' }" @click="visibility = 'active'">Active</a></li>
           <li><a href="#/completed" :class="{ selected: visibility == 'completed' }" @click="visibility = 'completed'">Completed</a></li>
         </ul>
-        <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
+          <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
           Clear completed
         </button>
       </footer>
@@ -84,8 +84,11 @@ export default {
     remaining() {
       return filters.active(this.todoList, this.todos).length;
     },
+    allTodos() {
+      return filters.all(this.todoList, this.todos);
+    },
     allDone() {
-			return this.todos.every(todo => todo.completed)
+			return this.todos.filter(todo => todo.todo_list_id === this.todoList.id).every(todo => todo.completed)
 		}
   },
   filters: {

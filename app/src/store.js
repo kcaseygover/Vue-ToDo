@@ -79,16 +79,15 @@ export default new Vuex.Store({
       const todo = await api.updateTodo(id, title, completed);
       commit('editTodo', todo)
     },
-    toggleAll ({ state, commit }, completed) {
-      state.todos.forEach((todo) => {
-        commit('editTodo', { todo, completed })
-      })
+    async toggleAll({ state, commit }, { done, todos }) {
+      const alltodos = await Promise.all(todos.map(todo => api.updateTodo(todo.id, todo.title, done)));
+      alltodos.forEach(todo => commit('editTodo', todo)) 
     },
     removeCompleted ({ state, commit }) {
       state.todos.filter(todo => todo.completed)
         .forEach(todo => {
           commit('removeTodo', todo)
         })
-    } 
+    }
   },
 });
