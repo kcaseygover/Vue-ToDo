@@ -18,8 +18,8 @@ export default new Vuex.Store({
       console.log('in addToDoList mutation');
       Vue.set(state.todoLists, todoList.id, todoList);
     },
-    removeTodoList(state, index) {
-      state.todoLists.splice(index, 1);
+    removeTodoList(state, id) {
+      Vue.delete(state.todoLists, id);
     },
     loadTodoList(state, todoList) {
       Vue.set(state.todoLists, todoList.id, todoList);
@@ -37,8 +37,10 @@ export default new Vuex.Store({
         completed: false,
       });
     },
-    removeTodo(state, index) {
-      state.todos.splice(state.todos.indexOf(index), 1)
+    removeTodo(state, { id, todoListId }) {
+      var index = state.todoLists[todoListId].todos.indexOf(id);
+      Vue.delete(state.todoLists[todoListId].todos, index);
+      Vue.delete(state.todos, id);
     },
     editTodo(state, { id, title, completed }) {
       state.todos[id].title = title;
@@ -55,9 +57,9 @@ export default new Vuex.Store({
       const todoList = await api.createTodoList(name);
       commit('addTodoList', todoList);
     },
-    async removeTodoList({ commit }, { id, index }) {
+    async removeTodoList({ commit }, { id }) {
       await api.deleteTodoList(id);
-      commit('removeTodoList', index);
+      commit('removeTodoList', id);
     },
     async loadTodoList({ commit }, { id }) {
       const todoList = await api.getTodoList(id);
@@ -72,8 +74,9 @@ export default new Vuex.Store({
     addTodo({ commit }, todo) {
       commit('addTodo', todo);
     },
-    removeTodo ({ commit }, todo) {
-      commit('removeTodo', todo)
+    async removeTodo({ commit }, { id, todoListId }) {
+      await api.deleteTodo(id);
+      commit('removeTodo', { id, todoListId });
     },
     async editTodo({ commit }, { id, title, completed }) {
       const todo = await api.updateTodo(id, title, completed);

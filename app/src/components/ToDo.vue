@@ -6,7 +6,7 @@
         :checked="todo.completed"
         @change="editTodo({id: todo.id, title: todo.title, completed: !todo.completed})">
       <label v-text="todo.title" @dblclick="editing = true"></label>
-      <button class="destroy" @click="removeTodo(todo)"></button>
+      <button class="destroy" @click="removeTodo({ id: todo.id, todoListId: todo.todo_list_id})"></button>
     </div>
     <input class="edit"
       v-show="editing"
@@ -45,7 +45,7 @@ export default {
       const title = e.target.value.trim()
       const { todo } = this
       if (!title) {
-        this.removeTodo(todo)
+        this.removeTodo({ id: todo.id, todoListId: todo.todo_list_id})
       } else if (this.editing) {
         this.editTodo({
           id: todo.id,

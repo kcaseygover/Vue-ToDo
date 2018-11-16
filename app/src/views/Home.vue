@@ -9,7 +9,7 @@
 				<li v-for="(list, index) in todoLists" :key="index">
 					<div class="view">
 						<router-link :to="{ name: 'TodoList', params: { id: list.id }}"><label v-text="list.name"></label></router-link>
-						<button class="destroy" @click.prevent="removeTodoList({id: list.id, index})"></button>
+						<button class="destroy" @click.prevent="removeTodoList({ id: list.id })"></button>
 					</div>
 				</li>
 			</ul>
