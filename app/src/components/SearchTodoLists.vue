@@ -73,8 +73,8 @@ export default {
     },
   },
   computed: {
-    todoLists() {
-			return this.$store.state.todoLists;
+		todoLists() {
+			return Object.values(this.$store.state.todoLists);
 		},
   }
 };
