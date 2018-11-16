@@ -7,9 +7,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: true,
   state: {
-    todoLists: [],
+    todoLists: {},
     todos: [],
-    newId: 2
   },
   mutations: {
     loadTodoLists(state, todoLists) {
@@ -26,7 +25,6 @@ export default new Vuex.Store({
       Vue.set(state.todoLists, todoList.id, todoList);
     },
     loadTodos(state, todos) {
-      state.todos.push([]);
       todos.forEach(todo => Vue.set(state.todos, todo.id, todo))
     },
     addTodo(state, value) {
@@ -49,7 +47,8 @@ export default new Vuex.Store({
   },
   actions: {
     async loadTodoLists({ commit }) {
-      const todoLists = await api.getTodoLists();
+      const response = await api.getTodoLists();
+      const todoLists = Object.assign({}, ...response.map(item => ({ [item.id]: item })));
       commit('loadTodoLists', todoLists);
     },
     async createTodoList({ commit }, name) {
@@ -80,7 +79,7 @@ export default new Vuex.Store({
       commit('editTodo', { todo, completed: !todo.completed })
     },
     editTodo ({ commit }, { todo, value }) {
-      commit('editTodo', { todo, title: value })
+      commit('editTodo', { todo, title: value }) 
     },
     toggleAll ({ state, commit }, completed) {
       state.todos.forEach((todo) => {
@@ -92,6 +91,6 @@ export default new Vuex.Store({
         .forEach(todo => {
           commit('removeTodo', todo)
         })
-    }
+    } 
   },
 });

@@ -48,7 +48,7 @@ const filters = {
 export default {
   name: 'TodoList',
   components: {
-		CreateToDo,
+    CreateToDo,
 		ToDo,
 	},
 	data() {
@@ -69,11 +69,14 @@ export default {
     ]),
   },
   computed: {
+    todoLists() {
+			return Object.values(this.$store.state.todoLists);
+		},
 		todoList() {
-			return this.$store.state.todoLists.find(list => list.id === this.$route.params.id);
+			return this.todoLists.find(list => list.id === this.$route.params.id);
 		},
 		todos() {
-			return this.$store.state.todos;
+     	return this.$store.state.todos;
 		},
     filteredTodos() {
       return filters[this.visibility](this.todos);
@@ -82,7 +85,7 @@ export default {
       return filters.active(this.todos).length;
     },
     allDone() {
-			 return this.todos.every(todo => todo.completed)
+			return this.todos.every(todo => todo.completed)
 		}
   },
   filters: {
