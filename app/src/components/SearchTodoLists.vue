@@ -4,18 +4,19 @@
       <input
         class="new-todo"
         autofocus
-        autocomplete="on"
+        autocomplete="off"
         placeholder="Search todo lists..."
         v-focus="searchValue"
         v-model="searchValue"
         @input="onChange"
         @keydown.enter="redirect"
       >
-      <ul v-show="isOpen" class="todo-list autocomplete-results">
+      <ul v-show="isOpen" class="todo-list autocomplete-results" tabindex="0">
         <li
         v-for="(result, i) in results"
         :key="i"
         class="autocomplete-result"
+        tabindex="0"
         @click="setResult(result)"
       >
         {{ result.name }}
@@ -50,7 +51,7 @@ export default {
     },
     filterResults() {
       this.results = this.todoLists.filter((todoList) => {
-        return todoList.name.toLowerCase().indexOf(this.searchValue.toLowerCase() > -1);
+        return todoList.name.toLowerCase().includes(this.searchValue.toLowerCase());
       })
     },
     setResult(result) {
@@ -97,6 +98,10 @@ export default {
   cursor: pointer;
 }
 .autocomplete-result:hover {
+  background-color: #4AAE9B;
+  color: white;
+}
+.autocomplete-result:focus {
   background-color: #4AAE9B;
   color: white;
 }
