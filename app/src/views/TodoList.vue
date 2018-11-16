@@ -23,7 +23,7 @@
           <li><a href="#/active" :class="{ selected: visibility == 'active' }" @click="visibility = 'active'">Active</a></li>
           <li><a href="#/completed" :class="{ selected: visibility == 'completed' }" @click="visibility = 'completed'">Completed</a></li>
         </ul>
-          <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
+           <button class="clear-completed" @click="removeCompleted(todoList.id)" v-show="todos.length > remaining">
           Clear completed
         </button>
       </footer>
