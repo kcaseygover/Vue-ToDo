@@ -39,13 +39,6 @@ export default new Vuex.Store({
       state.todos[id].title = title;
       state.todos[id].completed = completed;
     },
-    removeTodos(state, { todoListId, todoIds }) {
-      todoIds.forEach((id) => {
-        var index = state.todoLists[todoListId].todos.indexOf(id);
-        Vue.delete(state.todoLists[todoListId].todos, index);
-        Vue.delete(state.todos, id);
-      })
-    },
   },
   actions: {
     async loadTodoLists({ commit }) {
@@ -69,7 +62,7 @@ export default new Vuex.Store({
       // Or we could empty state between route changes
       const todos = await Promise.all(todoList.todos.map(id => api.getTodo(id)));
       commit('loadTodos', todos);
-      
+
     },
     async addTodo({ commit }, { todoListId, title }) {
       const todo = await api.createTodo(todoListId, title);
@@ -85,12 +78,14 @@ export default new Vuex.Store({
     },
     async toggleAll({ state, commit }, { done, todos }) {
       const alltodos = await Promise.all(todos.map(todo => api.updateTodo(todo.id, todo.title, done)));
-      alltodos.forEach(todo => commit('editTodo', todo)) 
+      alltodos.forEach(todo => commit('editTodo', todo))
     },
     async removeCompleted({ state, commit }, todoListId) {
       const completedTodos = state.todos.filter(t => t.todo_list_id === todoListId).filter(todo => todo.completed);
-      await Promise.all(completedTodos.map((todo) => api.deleteTodo(todo.id)));
-      commit('removeTodos', { todoListId, todoIds: completedTodos.map(t => t.id) });
-    }
+      await Promise.all(completedTodos.map(todo => api.deleteTodo(todo.id)));
+      completedTodos.sort((a, b) => a.id - b.id).reverse().forEach(todo => {
+        commit('removeTodo', { id: todo.id, todoListId })
+      })
+    },
   },
 });
