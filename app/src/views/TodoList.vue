@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 // @ is an alias to /src
 import CreateToDo from '@/components/CreateToDo.vue';
 import ToDo from '@/components/ToDo.vue';
@@ -40,44 +40,44 @@ import store from '@/store';
 
 // visibility filters
 const filters = {
-  all: (todoList, todos) => todos.filter(todo => todo.todo_list_id === todoList.id),
-  active: (todoList, todos) => todos.filter(todo => todo.todo_list_id === todoList.id).filter(todo => !todo.completed),
-  completed: (todoList, todos) => todos.filter(todo => todo.todo_list_id === todoList.id).filter(todo => todo.completed),
+  all: (todoList, todos) => todos,
+  active: (todoList, todos) => todos.filter(todo => !todo.completed),
+  completed: (todoList, todos) => todos.filter(todo => todo.completed),
 };
 
 export default {
   name: 'TodoList',
   components: {
     CreateToDo,
-		ToDo,
-	},
-	data() {
+    ToDo,
+  },
+  data() {
     return {
       visibility: 'all',
-      filters: filters
-    }
+      filters,
+    };
   },
   beforeRouteEnter(to, from, next) {
     store.dispatch('loadTodoList', { id: to.params.id });
     next();
   },
   methods: {
-		...mapActions([
+    ...mapActions([
       'toggleAll',
-			'removeCompleted',
-			'removeTodoList'
+      'removeCompleted',
+      'removeTodoList',
     ]),
   },
   computed: {
     todoLists() {
-			return Object.values(this.$store.state.todoLists);
-		},
-		todoList() {
+      return Object.values(this.$store.state.todoLists);
+    },
+    todoList() {
       return this.$store.state.todoLists[this.$route.params.id];
-		},
-		todos() {
-      return this.$store.state.todos;
-		},
+    },
+    todos() {
+      return this.$store.state.todos.filter(todo => todo.todo_list_id === this.todoList.id);
+    },
     filteredTodos() {
       return filters[this.visibility](this.todoList, this.todos);
     },
@@ -88,8 +88,8 @@ export default {
       return filters.all(this.todoList, this.todos);
     },
     allDone() {
-			return this.todos.filter(todo => todo.todo_list_id === this.todoList.id).every(todo => todo.completed)
-		}
+      return this.todos.every(todo => todo.completed);
+    },
   },
   filters: {
     pluralize(n) {
@@ -471,5 +471,3 @@ html .clear-completed:active {
 	}
 }
 </style>
-
-
