@@ -17,24 +17,17 @@ Built with:
 
 ## Project setup
 
-### clone project
-
 ```
+# clone project
 git clone git@github.com:kcaseygover/Vue-ToDo.git
-```
-### change to app directory
 
-```
+# change to app directory
 cd app
-```
 
-### install dependencies for frontend
-```
+# install dependencies for frontend
 npm install
-```
 
-### Compiles and hot-reloads for development on http://localhost:8080/
-```
+# Compiles and hot-reloads for development on http://localhost:8080/
 npm run serve
 ```
 
@@ -63,8 +56,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 
-# flask-todo server
-## Project set up for backend
+## flask-todo server - Project set up for backend
 
 Simple todo app REST API.
 
