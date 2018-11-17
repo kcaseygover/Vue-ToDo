@@ -8,21 +8,21 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 import SearchTodoLists from '@/components/SearchTodoLists.vue';
 
 export default {
   name: 'Search',
   components: { SearchTodoLists },
-   methods: {
-		...mapActions([
-			'removeTodoList'
+  methods: {
+    ...mapActions([
+      'removeTodoList',
     ]),
   },
   computed: {
-		todoLists() {
-			return Object.values(this.$store.state.todoLists);
-		},
+    todoLists() {
+      return Object.values(this.$store.state.todoLists);
+    },
   },
 };
 </script>

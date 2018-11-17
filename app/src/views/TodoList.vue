@@ -4,7 +4,12 @@
 			<h1>{{ todoList.name }}</h1>
       <CreateToDo />
       <section class="main" v-show="todos.length" v-cloak>
-        <input class="toggle-all" type="checkbox" :checked="allDone" @change="toggleAll({done:!allDone, todos: allTodos})">
+        <input
+          class="toggle-all"
+          type="checkbox"
+          :checked="allDone"
+          @change="toggleAll({done:!allDone, todos: allTodos})"
+        >
         <ul class="todo-list">
 					<ToDo
 						v-for="(todo, index) in filteredTodos"
@@ -19,12 +24,36 @@
           <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
         </span>
         <ul class="filters">
-          <li><a href="#/all" :class="{ selected: visibility == 'all' }" @click="visibility = 'all'">All</a></li>
-          <li><a href="#/active" :class="{ selected: visibility == 'active' }" @click="visibility = 'active'">Active</a></li>
-          <li><a href="#/completed" :class="{ selected: visibility == 'completed' }" @click="visibility = 'completed'">Completed</a></li>
+          <li>
+            <a href="#/all" :class="{ selected: visibility == 'all' }" @click="visibility = 'all'">
+              All
+            </a>
+          </li>
+          <li>
+            <a
+              href="#/active"
+              :class="{ selected: visibility == 'active' }"
+              @click="visibility = 'active'"
+              >
+              Active
+            </a>
+          </li>
+          <li>
+            <a
+              href="#/completed"
+              :class="{ selected: visibility == 'completed' }"
+              @click="visibility = 'completed'"
+            >
+              Completed
+            </a>
+          </li>
         </ul>
-           <button class="clear-completed" @click="removeCompleted(todoList.id)" v-show="todos.length > remaining">
-          Clear completed
+          <button
+            class="clear-completed"
+            @click="removeCompleted(todoList.id)"
+            v-show="todos.length > remaining"
+          >
+            Clear completed
         </button>
       </footer>
     </section>
@@ -58,7 +87,7 @@ export default {
     };
   },
   beforeRouteEnter(to, from, next) {
-    store.dispatch('loadTodoList', { id: to.params.id });
+    store.dispatch('loadTodoList', { todoListId: to.params.id });
     next();
   },
   methods: {

@@ -8,7 +8,9 @@
 			<ul class="todo-list">
 				<li v-for="(list, index) in todoLists" :key="index">
 					<div class="view">
-						<router-link :to="{ name: 'TodoList', params: { id: list.id }}"><label v-text="list.name"></label></router-link>
+						<router-link :to="{ name: 'TodoList', params: { id: list.id }}">
+							<label v-text="list.name"></label>
+						</router-link>
 						<button class="destroy" @click.prevent="removeTodoList({ id: list.id })"></button>
 					</div>
 				</li>
@@ -18,23 +20,23 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 import CreateToDoList from '@/components/CreateToDoList.vue';
 
 export default {
   name: 'home',
   components: {
-		CreateToDoList,
-	},
+    CreateToDoList,
+  },
   methods: {
-		...mapActions([
-			'removeTodoList'
+    ...mapActions([
+      'removeTodoList',
     ]),
   },
   computed: {
-		todoLists() {
-			return Object.values(this.$store.state.todoLists);
-		},
+    todoLists() {
+      return Object.values(this.$store.state.todoLists);
+    },
   },
 };
 </script>

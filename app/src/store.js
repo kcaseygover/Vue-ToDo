@@ -24,14 +24,14 @@ export default new Vuex.Store({
       Vue.set(state.todoLists, todoList.id, todoList);
     },
     loadTodos(state, todos) {
-      todos.forEach(todo => Vue.set(state.todos, todo.id, todo))
+      todos.forEach(todo => Vue.set(state.todos, todo.id, todo));
     },
     addTodo(state, todo) {
       Vue.set(state.todos, todo.id, todo);
       state.todoLists[todo.todo_list_id].todos.push(todo.id);
     },
     removeTodo(state, { id, todoListId }) {
-      var index = state.todoLists[todoListId].todos.indexOf(id);
+      const index = state.todoLists[todoListId].todos.indexOf(id);
       Vue.delete(state.todoLists[todoListId].todos, index);
       Vue.delete(state.todos, id);
     },
@@ -54,15 +54,10 @@ export default new Vuex.Store({
       await api.deleteTodoList(id);
       commit('removeTodoList', id);
     },
-    async loadTodoList({ commit }, { id }) {
-      const todoList = await api.getTodoList(id);
-      // Adding a commit of a single todoList is causing a double entry in the store
-      // We already have the todoList in the store from when app mounted
-      // We could check the store and load the todoList if not commited
-      // Or we could empty state between route changes
+    async loadTodoList({ commit }, { todoListId }) {
+      const todoList = await api.getTodoList(todoListId);
       const todos = await Promise.all(todoList.todos.map(id => api.getTodo(id)));
       commit('loadTodos', todos);
-
     },
     async addTodo({ commit }, { todoListId, title }) {
       const todo = await api.createTodo(todoListId, title);
@@ -74,18 +69,21 @@ export default new Vuex.Store({
     },
     async editTodo({ commit }, { id, title, completed }) {
       const todo = await api.updateTodo(id, title, completed);
-      commit('editTodo', todo)
+      commit('editTodo', todo);
     },
-    async toggleAll({ state, commit }, { done, todos }) {
-      const alltodos = await Promise.all(todos.map(todo => api.updateTodo(todo.id, todo.title, done)));
-      alltodos.forEach(todo => commit('editTodo', todo))
+    async toggleAll({ commit }, { done, todos }) {
+      const alltodos = await
+      Promise.all(todos.map(todo => api.updateTodo(todo.id, todo.title, done)));
+      alltodos.forEach(todo => commit('editTodo', todo));
     },
     async removeCompleted({ state, commit }, todoListId) {
-      const completedTodos = state.todos.filter(t => t.todo_list_id === todoListId).filter(todo => todo.completed);
+      const completedTodos = state.todos
+        .filter(t => t.todo_list_id === todoListId)
+        .filter(todo => todo.completed);
       await Promise.all(completedTodos.map(todo => api.deleteTodo(todo.id)));
-      completedTodos.sort((a, b) => a.id - b.id).reverse().forEach(todo => {
-        commit('removeTodo', { id: todo.id, todoListId })
-      })
+      completedTodos.sort((a, b) => a.id - b.id).reverse().forEach((todo) => {
+        commit('removeTodo', { id: todo.id, todoListId });
+      });
     },
   },
 });

@@ -9,7 +9,7 @@ new Vue({
   router,
   store,
   created() {
-    this.$store.dispatch('loadTodoLists') // dispatch loading
+    this.$store.dispatch('loadTodoLists'); // dispatch loading
   },
   render: h => h(App),
 }).$mount('#app');

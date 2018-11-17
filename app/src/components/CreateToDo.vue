@@ -22,6 +22,6 @@ export default {
         e.target.value = '';
       }
     },
-  }
+  },
 };
 </script>

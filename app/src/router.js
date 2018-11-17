@@ -14,15 +14,15 @@ export default new Router({
       name: 'home',
       component: Home,
     },
-    { 
+    {
       path: '/todo-lists/:id',
       name: 'TodoList',
       component: TodoList,
     },
-    { 
+    {
       path: '/search',
       name: 'Search',
       component: Search,
-    }
+    },
   ],
 });

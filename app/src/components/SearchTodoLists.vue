@@ -34,25 +34,25 @@ export default {
       searchValue: '',
       searchValueId: '',
       results: [],
-      isOpen: false
-    }
+      isOpen: false,
+    };
   },
   directives: {
-      focus(el, binding) {
+    focus(el, binding) {
       if (binding.value) {
         el.focus();
       }
-    }
+    },
   },
   methods: {
     onChange() {
       this.isOpen = true;
       this.filterResults();
+      if (this.searchValue === '') this.isOpen = false;
     },
     filterResults() {
-      this.results = this.todoLists.filter((todoList) => {
-        return todoList.name.toLowerCase().includes(this.searchValue.toLowerCase());
-      })
+      this.results = this.todoLists
+        .filter(todoList => todoList.name.toLowerCase().includes(this.searchValue.toLowerCase()));
     },
     setResult(result) {
       this.searchValue = result.name;
@@ -61,7 +61,7 @@ export default {
     },
     redirect() {
       if (this.todoLists.some(list => list.id === this.searchValueId)) {
-        this.$router.push({ name: 'TodoList', params: { id: this.searchValueId }});
+        this.$router.push({ name: 'TodoList', params: { id: this.searchValueId } });
         this.searchValue = '';
         this.searchValueId = '';
         this.results = [];
@@ -73,10 +73,10 @@ export default {
     },
   },
   computed: {
-		todoLists() {
-			return Object.values(this.$store.state.todoLists);
-		},
-  }
+    todoLists() {
+      return Object.values(this.$store.state.todoLists);
+    },
+  },
 };
 </script>
 <style>
